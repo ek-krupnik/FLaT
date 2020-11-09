@@ -25,31 +25,23 @@ def FindShortestWordLen(machine, x, k):
     possible_answer = [INF]
     while len(stack) > 0:
 
-        # print(stack)
         pair = stack.pop()
         current_state = pair[0]
         current_step = pair[1]
 
         for to in reversed_machine[current_state].keys():
-            # print(reversed_machine[current_state].keys())
             for letter in reversed_machine[current_state][to]:
-
-                # print(reversed_machine[current_state][to])
-                # print(k, current_step, current_state, to, letter)
 
                 if letter == '1' and current_step < min(possible_answer):
                     stack.append((to, current_step))
-                    # print('here')
                     continue
 
                 if k > current_step and letter == x and current_step + 1 < min(possible_answer):
                     stack.append((to, current_step + 1))
-                    # print(stack)
                     continue
                 if k <= current_step:
                     # terminate state
                     if to == 0:
-                        # print('find', current_step, current_state)
                         possible_answer.append(current_step + 1)
                     elif current_step + 1 < min(possible_answer):
                         stack.append((to, current_step + 1))

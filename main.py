@@ -8,11 +8,9 @@ def main(input_string):
         ReturnError(InputArgumentSizeError)
 
     reg_exp = ParseRegExp(input_string[0])
-    print(reg_exp)
 
     # dict from_state : {to_state : [letter,], }
     machine = CreateFiniteStateMachine(reg_exp)
-    print(machine)
 
     x = input_string[1]
     k = -1
@@ -22,13 +20,9 @@ def main(input_string):
         ReturnError(InputArgumentTypeError)
 
     answer = FindShortestWordLen(machine, x, k)
-    print(answer)
     return answer
 
 
 if __name__ == "__main__":
     input_string = input().split(' ')
-    main(input_string)
-
-# ab+c.aba.*.bac.+.+* b 2
-# acb..bab.c.*.ab.ba.+.+*a. a 2
+    print(main(input_string))

@@ -36,20 +36,6 @@ def GetExpressionAnderOperation(expression):
 
     # (S) or S -> divide on S = KT
     if plus_position == -1:
-        # print('find')
-        # i = 0
-        # while expression[i] == '(':
-        #     i += 1
-        # j = 0
-        # while expression[len(expression) - j - 1] == ')':
-        #     j += 1
-        # cnt_brackets = min(i, j)
-        # i = cnt_brackets
-        # j = len(expression) - cnt_brackets
-        # if cnt_brackets == 0:
-        #     j = len(expression)
-        # if i + j != 0:
-        #     ReturnError(BracketBalanceError)
         i = 0
         j = len(expression)
 
@@ -136,7 +122,7 @@ def CreateFiniteStateMachine(reg_exp):
                             # adding new
                             state_count, machine = AddTransition(state_count, machine, from_state, to_state,
                                                                  GetExpressionAnderOperation(transition))
-                            # print(machine)
+
                 # there is no such transition
                 except Exception:
                     pass

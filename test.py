@@ -1,7 +1,6 @@
 import unittest
 import create_regexp
 import create_machine
-import passing_machine
 import main
 from constants import *
 
