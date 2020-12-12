@@ -19,4 +19,3 @@
    1) Возможно, потребуется установить coverage модуль для Python (pip install coverage)
    2) Команда coverage run test.py - делает все необходимое
    3) Визуализация результата: coverage html
-    
