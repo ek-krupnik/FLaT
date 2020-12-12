@@ -30,6 +30,31 @@ class TestCorrectTask(unittest.TestCase):
         self.assertEqual(main.main(['acb..bab.c.*.ab.ba.+.+*a.', 'a', '2']), '4',
                          'Wrong answer for second test')
 
+    def test_find_third_right_answer(self):
+        self.assertEqual(main.main(['acc.b+.a.a.', 'a', '3']), 'INF',
+                         'Wrong answer for third test')
+
+    def test_find_fourth_right_answer(self):
+        self.assertEqual(main.main(['b*b.', 'b', '3']), '4',
+                         'Wrong answer for fourth test')
+
+    def test_find_fifth_right_answer(self):
+        self.assertEqual(main.main(['aaa.aa.c.+.a.', 'a', '2']), '4',
+                         'Wrong answer for fifth test')
+
+    def test_find_sixth_right_answer(self):
+        self.assertEqual(main.main(['aaab..aabc...+.', 'b', '1']), '4',
+                         'Wrong answer for sixth test')
+
+    def test_find_seventh_right_answer(self):
+        self.assertEqual(main.main(['aaab..aabc...+.', 'b', '2']), 'INF',
+                         'Wrong answer for seventh test')
+
+    def test_find_eighth_right_answer(self):
+        self.assertEqual(main.main(['aaab..aabc...+.', 'a', '1']), 'INF',
+                         'Wrong answer for eighth test')
+
+
 
 class TestProgramMistakes(unittest.TestCase):
 

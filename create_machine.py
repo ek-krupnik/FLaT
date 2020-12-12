@@ -1,35 +1,39 @@
 from constants import *
+from collections import namedtuple
 
 
-# returning list [operation, first_argument, second_argument = '']
 def GetExpressionAnderOperation(expression):
+    # returning namedtuple [operation, first_argument, second_argument = '']
+    ParsedExpression = namedtuple('ParsedExpression', 'operation first_argument second_argument')
+
     if expression.count('(') != expression.count(')'):
         ReturnError(BracketBalanceError)
 
     # (result)*
     if expression[-1] == '*' and expression[0] == '(' and expression[-2] == ')':
-        return ['*', expression[1:-2], '']
+        return ParsedExpression(operation='*', first_argument=expression[1:-2], second_argument='')
 
     # (first_argument + second_argument)
     # brackets balanced check
 
     # (a+b)
     if expression.count('(') != 0 and expression[1:-1].count('(') == 0 and expression[1:-1].count(')') == 0:
-        plus_ind = expression.find('+')
-        return ['+', expression[1:plus_ind], expression[plus_ind + 1:-1]]
+        plus_index = expression.find('+')
+        return ParsedExpression(operation='+', first_argument=expression[1:plus_index],
+                                second_argument=expression[plus_index + 1:-1])
 
     balance = 0
     plus_position = -1
     if expression[0] == '(' and expression[-1] == ')':
-        for i, symb in enumerate(expression[1:-1]):
-            if symb == '(':
+        for i, symbol in enumerate(expression[1:-1]):
+            if symbol == '(':
                 balance += 1
-            if symb == ')':
+            if symbol == ')':
                 balance -= 1
             if balance < 0:
                 plus_position = -1
                 break
-            if balance == 0 and symb == '+':
+            if balance == 0 and symbol == '+':
                 if plus_position != -1:
                     ReturnError(PlusParsingError)
                 plus_position = i + 1
@@ -40,22 +44,24 @@ def GetExpressionAnderOperation(expression):
         j = len(expression)
 
         balance = 0
-        divide_ind = -1
-        for it, symb in enumerate(expression):
-            if symb == '(':
+        divide_index = -1
+        for it, symbol in enumerate(expression):
+            if symbol == '(':
                 balance += 1
-            if symb == ')':
+            if symbol == ')':
                 balance -= 1
             # cut first independent part as K
             if balance == 0:
-                divide_ind = it + 1
+                divide_index = it + 1
                 break
-        if divide_ind < len(expression) and expression[divide_ind] == '*':
-            divide_ind += 1
+        if divide_index < len(expression) and expression[divide_index] == '*':
+            divide_index += 1
 
-        return ['.', expression[i: divide_ind], expression[divide_ind: j]]
+        return ParsedExpression(operation='.', first_argument=expression[i: divide_index],
+                                second_argument=expression[divide_index: j])
 
-    return ['+', expression[1:plus_position], expression[plus_position + 1:-1]]
+    return ParsedExpression(operation='+', first_argument=expression[1:plus_position],
+                            second_argument=expression[plus_position + 1:-1])
 
 
 def AddArgument(machine, from_state, to_state, argument):
@@ -65,11 +71,11 @@ def AddArgument(machine, from_state, to_state, argument):
         machine[from_state][to_state] = [argument]
 
 
-# get machine and list [operation, first_argument, second_argument = '']
+# get machine and namedtuple [operation, first_argument, second_argument = '']
 def AddTransition(state_count, machine, from_state, to_state, transition):
-    operation = transition[0]
-    first_argument = transition[1]
-    second_argument = transition[2]
+    operation = transition.operation
+    first_argument = transition.first_argument
+    second_argument = transition.second_argument
 
     # from_state -(first_argument.second_argument)-> to_state
     # to
@@ -100,6 +106,28 @@ def AddTransition(state_count, machine, from_state, to_state, transition):
     return state_count, machine
 
 
+def PassTransition(machine, from_state, to_state, state_count, end):
+
+    start_end = end
+    start_state_count = state_count
+    start_machine = machine
+    try:
+        for transition in machine[from_state][to_state]:
+            if len(transition) > 1:
+                end = False
+                # delete it from machine
+                machine[from_state][to_state].remove(transition)
+                # adding new
+                state_count, machine = AddTransition(state_count, machine, from_state, to_state,
+                                                     GetExpressionAnderOperation(transition))
+
+    # there is no such transition
+    except KeyError:
+        return start_end, start_state_count, start_machine
+
+    return end, state_count, machine
+
+
 # dict from_state : {to_state : [letter,], }
 # start state = 0
 # end state in beginning =1
@@ -111,19 +139,10 @@ def CreateFiniteStateMachine(reg_exp):
     while not end:
         end = True
         out_states = state_count
+
         for from_state in range(out_states):
             for to_state in range(out_states):
-                try:
-                    for transition in machine[from_state][to_state]:
-                        if len(transition) > 1:
-                            end = False
-                            # delete it from machine
-                            machine[from_state][to_state].remove(transition)
-                            # adding new
-                            state_count, machine = AddTransition(state_count, machine, from_state, to_state,
-                                                                 GetExpressionAnderOperation(transition))
 
-                # there is no such transition
-                except Exception:
-                    pass
+                end, state_count, machine = PassTransition(machine, from_state, to_state, state_count, end)
+
     return machine

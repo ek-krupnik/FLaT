@@ -10,11 +10,11 @@ LETTERS = ['a', 'b', 'c', '1']
 OPERATIONS = ['.', '+', '*']
 
 CommonErrorMessage = "ERROR : "
-InputValueError = "Wrong input value"
-InputArgumentTypeError = "Third argument should be integer"
-InputArgumentSizeError = "Wrong number of arguments"
-ResultStackError = "Wrong stack size after creating regexp"
-CurrentStackError = "Wrong stack size during parsing"
+InputValueErrorMessage = "Wrong input value"
+InputArgumentTypeErrorMessage = "Third argument should be integer"
+InputArgumentSizeErrorMessage = "Wrong number of arguments"
+ResultStackErrorMessage = "Wrong stack size after creating regexp"
+CurrentStackErrorMessage = "Wrong stack size during parsing"
 
 PlusParsingError = "There is more than one plus in one bracket"
 BracketBalanceError = "Wrong bracket balance"

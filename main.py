@@ -5,7 +5,7 @@ from passing_machine import *
 
 def main(input_string):
     if len(input_string) < NumberOfArguments:
-        ReturnError(InputArgumentSizeError)
+        ReturnError(InputArgumentSizeErrorMessage)
 
     reg_exp = ParseRegExp(input_string[0])
 
@@ -17,7 +17,7 @@ def main(input_string):
     try:
         k = int(input_string[2])
     except TypeError:
-        ReturnError(InputArgumentTypeError)
+        ReturnError(InputArgumentTypeErrorMessage)
 
     answer = FindShortestWordLen(machine, x, k)
     return answer
